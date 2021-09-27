@@ -1,7 +1,10 @@
-import { Form, Field, VueFormily } from '@vue-formily/formily';
+import { Form, Field, createFormily, defineSchema } from '@vue-formily/formily';
 import { minLength } from '@/.';
+import { createForm } from './helpers';
 
-VueFormily.register(Field);
+const formily = createFormily();
+
+formily.register(Field);
 
 describe('minLength', () => {
   test('Validator', async () => {
@@ -16,36 +19,38 @@ describe('minLength', () => {
   });
 
   it('Should apply only for "string", "enum", "set" Field', async () => {
-    const form = new Form({
-      formId: 'test',
-      props: {
-        minLength: 1
-      },
-      rules: [minLength],
-      fields: [
-        {
-          formId: 'a',
-          props: {
-            minLength: 2
-          },
-          rules: [minLength]
+    const form = createForm(
+      defineSchema({
+        formId: 'test',
+        props: {
+          minLength: 1
         },
-        {
-          formId: 'b',
-          group: {
-            fields: [
-              {
-                formId: 'c'
-              }
-            ]
+        rules: [minLength],
+        fields: [
+          {
+            formId: 'a',
+            props: {
+              minLength: 2
+            },
+            rules: [minLength]
           },
-          props: {
-            minLength: 1
-          },
-          rules: [minLength]
-        }
-      ]
-    });
+          {
+            formId: 'b',
+            group: {
+              fields: [
+                {
+                  formId: 'c'
+                }
+              ]
+            },
+            props: {
+              minLength: 1
+            },
+            rules: [minLength]
+          }
+        ]
+      })
+    );
 
     await form.setValue({
       a: 'abc',

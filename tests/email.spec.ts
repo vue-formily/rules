@@ -1,7 +1,10 @@
-import { Form, Field, VueFormily } from '@vue-formily/formily';
+import { Field, createFormily, defineSchema } from '@vue-formily/formily';
 import { email } from '@/.';
+import { createForm } from './helpers';
 
-VueFormily.register(Field);
+const formily = createFormily();
+
+formily.register(Field);
 
 describe('email', () => {
   test('Validator', async () => {
@@ -15,22 +18,24 @@ describe('email', () => {
   });
 
   it('Should apply only for "string" Field', async () => {
-    const form = new Form({
-      formId: 'test',
-      fields: [
-        {
-          formId: 'a',
-          value: 'test',
-          rules: [email]
-        },
-        {
-          formId: 'b',
-          type: 'number',
-          value: 'test',
-          rules: [email]
-        }
-      ]
-    });
+    const form = createForm(
+      defineSchema({
+        formId: 'test',
+        fields: [
+          {
+            formId: 'a',
+            value: 'test',
+            rules: [email]
+          },
+          {
+            formId: 'b',
+            type: 'number',
+            value: 'test',
+            rules: [email]
+          }
+        ]
+      })
+    );
 
     form.on('validated', () => {
       expect(form.a.valid).toBe(false);

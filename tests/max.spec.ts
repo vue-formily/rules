@@ -1,7 +1,10 @@
-import { Form, Field, VueFormily } from '@vue-formily/formily';
+import { Field, createFormily, defineSchema } from '@vue-formily/formily';
 import { max } from '@/.';
+import { createForm } from './helpers';
 
-VueFormily.register(Field);
+const formily = createFormily();
+
+formily.register(Field);
 
 describe('max', () => {
   test('Validator', async () => {
@@ -20,34 +23,36 @@ describe('max', () => {
   });
 
   it('Should apply only for "date" and "number" Field', async () => {
-    const form = new Form({
-      formId: 'test',
-      fields: [
-        {
-          formId: 'a',
-          value: 'test',
-          rules: [max]
-        },
-        {
-          formId: 'b',
-          type: 'number',
-          value: '1',
-          props: {
-            max: 2
+    const form = createForm(
+      defineSchema({
+        formId: 'test',
+        fields: [
+          {
+            formId: 'a',
+            value: 'test',
+            rules: [max]
           },
-          rules: [max]
-        },
-        {
-          formId: 'c',
-          type: 'date',
-          value: '1/1/21',
-          props: {
-            max: new Date('2/1/21')
+          {
+            formId: 'b',
+            type: 'number',
+            value: '1',
+            props: {
+              max: 2
+            },
+            rules: [max]
           },
-          rules: [max]
-        }
-      ]
-    });
+          {
+            formId: 'c',
+            type: 'date',
+            value: '1/1/21',
+            props: {
+              max: new Date('2/1/21')
+            },
+            rules: [max]
+          }
+        ]
+      })
+    );
 
     form.on('validated', () => {
       expect(form.a.valid).toBe(true);

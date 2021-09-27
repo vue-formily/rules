@@ -1,7 +1,10 @@
-import { Form, Field, VueFormily } from '@vue-formily/formily';
+import { Field, createFormily, defineSchema } from '@vue-formily/formily';
 import { numeric } from '@/.';
+import { createForm } from './helpers';
 
-VueFormily.register(Field);
+const formily = createFormily();
+
+formily.register(Field);
 
 describe('numeric', () => {
   test('Validator', async () => {
@@ -19,22 +22,24 @@ describe('numeric', () => {
   });
 
   it('Should apply only for "string" Field', async () => {
-    const form = new Form({
-      formId: 'test',
-      fields: [
-        {
-          formId: 'a',
-          value: 'test',
-          rules: [numeric]
-        },
-        {
-          formId: 'b',
-          type: 'number',
-          value: 'test',
-          rules: [numeric]
-        }
-      ]
-    });
+    const form = createForm(
+      defineSchema({
+        formId: 'test',
+        fields: [
+          {
+            formId: 'a',
+            value: 'test',
+            rules: [numeric]
+          },
+          {
+            formId: 'b',
+            type: 'number',
+            value: 'test',
+            rules: [numeric]
+          }
+        ]
+      })
+    );
 
     form.on('validated', () => {
       expect(form.a.valid).toBe(false);

@@ -1,7 +1,10 @@
-import { Form, Field, VueFormily } from '@vue-formily/formily';
+import { Field, createFormily, defineSchema } from '@vue-formily/formily';
 import { maxLength } from '@/.';
+import { createForm } from './helpers';
 
-VueFormily.register(Field);
+const formily = createFormily();
+
+formily.register(Field);
 
 describe('maxLength', () => {
   test('Validator', async () => {
@@ -16,36 +19,37 @@ describe('maxLength', () => {
   });
 
   it('Should apply only for "string", "enum", "set" Field', async () => {
-    const form = new Form({
-      formId: 'test',
-      props: {
-        maxLength: 1
-      },
-      rules: [maxLength],
-      fields: [
-        {
-          formId: 'a',
-          props: {
-            maxLength: 2
-          },
-          rules: [maxLength]
+    const form = createForm(
+      defineSchema({
+        formId: 'test',
+        props: {
+          maxLength: 1
         },
-        {
-          formId: 'b',
-          group: {
-            fields: [
-              {
-                formId: 'c'
-              }
-            ]
+        // cascade by default
+        rules: [maxLength],
+        fields: [
+          {
+            formId: 'a',
+            props: {
+              maxLength: 2
+            }
           },
-          props: {
-            maxLength: 1
-          },
-          rules: [maxLength]
-        }
-      ]
-    });
+          {
+            formId: 'b',
+            group: {
+              fields: [
+                {
+                  formId: 'c'
+                }
+              ]
+            },
+            props: {
+              maxLength: 1
+            }
+          }
+        ]
+      })
+    );
 
     await form.setValue({
       a: 'abc',

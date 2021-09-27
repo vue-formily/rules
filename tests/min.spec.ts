@@ -1,7 +1,10 @@
-import { Form, Field, VueFormily } from '@vue-formily/formily';
+import { Field, createFormily, defineSchema } from '@vue-formily/formily';
 import { min } from '@/.';
+import { createForm } from './helpers';
 
-VueFormily.register(Field);
+const formily = createFormily();
+
+formily.register(Field);
 
 describe('min', () => {
   test('Validator', async () => {
@@ -20,34 +23,36 @@ describe('min', () => {
   });
 
   it('Should apply only for "date" and "number" Field', async () => {
-    const form = new Form({
-      formId: 'test',
-      fields: [
-        {
-          formId: 'a',
-          value: 'test',
-          rules: [min]
-        },
-        {
-          formId: 'b',
-          type: 'number',
-          value: '1',
-          props: {
-            min: 2
+    const form = createForm(
+      defineSchema({
+        formId: 'test',
+        fields: [
+          {
+            formId: 'a',
+            value: 'test',
+            rules: [min]
           },
-          rules: [min]
-        },
-        {
-          formId: 'c',
-          type: 'date',
-          value: '1/1/21',
-          props: {
-            min: new Date('2/1/21')
+          {
+            formId: 'b',
+            type: 'number',
+            value: '1',
+            props: {
+              min: 2
+            },
+            rules: [min]
           },
-          rules: [min]
-        }
-      ]
-    });
+          {
+            formId: 'c',
+            type: 'date',
+            value: '1/1/21',
+            props: {
+              min: new Date('2/1/21')
+            },
+            rules: [min]
+          }
+        ]
+      })
+    );
 
     form.on('validated', () => {
       expect(form.a.valid).toBe(true);

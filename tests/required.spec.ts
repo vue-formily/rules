@@ -1,7 +1,9 @@
-import { Field, VueFormily } from '@vue-formily/formily';
+import { Field, createFormily } from '@vue-formily/formily';
 import { required } from '@/.';
 
-VueFormily.register(Field);
+const formily = createFormily();
+
+formily.register(Field);
 
 describe('required', () => {
   test('Validator', async () => {
