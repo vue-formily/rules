@@ -27,6 +27,4 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   else
     np $VERSION --branch $BRANCH --tag $TAG --message "build: release $VERSION"
   fi
-
-  npm dist-tag add @vue-formily/rules@$VERSION $VERSION
 fi
