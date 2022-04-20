@@ -4,7 +4,7 @@
   "description": "Validation rules for vue-formily.",
   "author": "An Ha",
   "license": "MIT",
-  "module": "esm/src/index.js",
+  "module": "esm/index.js",
   "unpkg": "dist/rules.js",
   "main": "dist/rules.js",
   "types": "dist/rules.d.ts",
